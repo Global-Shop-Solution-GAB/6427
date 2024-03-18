@@ -1,0 +1,883 @@
+Program.Sub.ScreenSU.Start
+Gui.Form..Create
+Gui.Form..Caption("Inventory Parts Browser")
+Gui.Form..Size(14865,9585)
+Gui.Form..MinX(800)
+Gui.Form..MinY(700)
+Gui.Form..Position(0,0)
+Gui.Form..AlwaysOnTop(True)
+Gui.Form..FontName("Tahoma")
+Gui.Form..FontSize(8.5)
+Gui.Form..MousePointer(0)
+Gui.Form..Event(UnLoad,Form_UnLoad)
+Gui.Form..BackColor(-2147483633)
+Gui.Form.GsGridControl1.Create(GsGridControl)
+Gui.Form.GsGridControl1.Size(14610,8970)
+Gui.Form.GsGridControl1.Position(0,0)
+Gui.Form.GsGridControl1.Event(RowClick,cmd1_Click)
+Gui.Form.GsGridControl1.Anchor(15)
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+v.Global.iViewMode.Declare '0 - Standard, 1 - Cross Reference
+v.Global.iViewMode.Set(0)
+v.Global.bLongPart.Declare
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+
+F.Global.Registry.ReadValue(V.Caller.User,V.Caller.CompanyCode,"gvInventoryBrowser",6427,1,1,0,V.Global.iViewMode)
+f.Intrinsic.Control.If(v.Caller.Hook,=,38130)
+	f.Intrinsic.Control.CallSub(CacheBrowserData)
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.If(V.Caller.Hook,=,"17380")
+	'009001 - part/rev
+	'009002 - location
+	'777777 - cancel
+	f.Intrinsic.Control.CallSub("LoadContextMenu")
+	f.Intrinsic.Control.CallSub("LoadGridView")
+F.Intrinsic.Control.Else
+	F.Intrinsic.Control.End
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.Main.End
+
+Program.Sub.cmd1_Click.Start
+F.Intrinsic.Control.SetErrorHandler("cmd1_Click_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.sPartRev.Declare
+v.Local.sLocation.Declare
+
+f.Intrinsic.Control.If(v.Args.Clicks,=,2)
+	v.Passed.777777.Set(1)
+	f.Intrinsic.Control.SelectCase(v.Global.iViewMode)
+	f.Intrinsic.Control.Case(0)
+		gui.Form.GsGridControl1.GetCellValueByColumnName("gvInventoryBrowser","PartRev",v.Args.RowIndex,v.Local.sPartRev)
+		gui.Form.GsGridControl1.GetCellValueByColumnName("gvInventoryBrowser","Loc",v.Args.RowIndex,v.Local.sLocation)
+	f.Intrinsic.Control.Case(1)
+		gui.Form.GsGridControl1.GetCellValueByColumnName("gvInventoryBrowserXref","PartRev",v.Args.RowIndex,v.Local.sPartRev)
+		gui.Form.GsGridControl1.GetCellValueByColumnName("gvInventoryBrowserXref","Loc",v.Args.RowIndex,v.Local.sLocation)
+	f.Intrinsic.Control.EndSelect
+	v.Passed.009001.Set(v.Local.sPartRev)
+	v.Passed.009002.Set(v.Local.sLocation)
+	f.Intrinsic.Control.CallSub("Serialize")
+	f.Intrinsic.Control.End
+f.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmd1_Click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.cmd1_Click.End
+
+Program.Sub.Form_UnLoad.Start
+F.Intrinsic.Control.SetErrorHandler("Form_UnLoad_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.sPartRev.Declare
+v.Local.sLocation.Declare
+
+F.Intrinsic.Control.CallSub("Serialize")
+v.Passed.777777.Set(1)
+f.Intrinsic.Control.If(v.Passed.009001.Trim,=,"")
+	f.Intrinsic.Control.SelectCase(v.Global.iViewMode)
+	f.Intrinsic.Control.Case(0)
+		gui.Form.GsGridControl1.GetCellValueByColumnName("gvInventoryBrowser","PartRev",0,v.Local.sPartRev)
+		gui.Form.GsGridControl1.GetCellValueByColumnName("gvInventoryBrowser","Loc",0,v.Local.sLocation)
+	f.Intrinsic.Control.Case(1)
+		gui.Form.GsGridControl1.GetCellValueByColumnName("gvInventoryBrowserXref","PartRev",0,v.Local.sPartRev)
+		gui.Form.GsGridControl1.GetCellValueByColumnName("gvInventoryBrowserXref","Loc",0,v.Local.sLocation)
+	f.Intrinsic.Control.EndSelect
+	v.Passed.009001.Set(v.Local.sPartRev)
+	v.Passed.009002.Set(v.Local.sLocation)
+f.Intrinsic.Control.EndIf
+f.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Form_UnLoad_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.Form_UnLoad.End
+
+Program.Sub.LoadGridView.Start
+F.Intrinsic.Control.SetErrorHandler("LoadGridView_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.sXML.Declare
+v.Local.bDTexists.Declare
+v.Local.sGridView.Declare
+v.Local.bCacheFileExists.Declare
+
+
+gui.Form.GsGridControl1.SuspendLayout
+
+f.Intrinsic.Control.If(v.DataTable.dtInventoryBrowser.Exists)
+	f.Data.Datatable.Close("dtInventoryBrowser")
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.If(v.DataTable.dtInventoryBrowserXref.Exists)
+	f.Data.Datatable.Close("dtInventoryBrowserXref")
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.Control.Try
+	f.Intrinsic.String.Build("{0}\{1}InventoryBrowserCacheData.xml",v.Caller.FilesDir,v.Caller.CompanyCode,v.Local.sXML)
+	'check if xml exists, if not then call cache sub.  only need to do it for one since the cache sub does both standard and xref
+	f.Intrinsic.File.Exists(v.Local.sXML,v.Local.bCacheFileExists)
+	f.Intrinsic.Control.If(v.Local.bCacheFileExists.Not)
+		f.Intrinsic.Control.CallSub(CacheBrowserData)
+	f.Intrinsic.Control.EndIf
+	f.Intrinsic.Control.CallSub("BuildFormCaption","XMLfile",v.Local.sXML)
+	f.Data.Datatable.CreateFromXML("dtInventoryBrowser",v.Local.sXML,True)
+f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox("Error Occurred Trying to Build Datatable","Error")
+	gui.Form.GsGridControl1.ResumeLayout
+	f.Intrinsic.Control.ExitSub
+f.Intrinsic.Control.EndTry
+
+'build both gridviews
+gui.Form.GsGridControl1.AddGridviewFromDatatable("gvInventoryBrowser","dtInventoryBrowser")
+
+'establish main grid view and set, then call appropriate grid view formatting subs
+f.Intrinsic.Control.CallSub("FormatStandardColumns")
+
+f.Intrinsic.Control.SelectCase(v.Global.iViewMode)
+f.Intrinsic.Control.Case(0) 'Standard
+	v.Local.sGridView.Set("gvInventoryBrowser")
+	gui.Form.GsGridControl1.MainView(v.Local.sGridView)
+f.Intrinsic.Control.Case(1) 'Xref
+	v.Local.sGridView.Set("gvInventoryBrowserXref")
+	gui.Form.GsGridControl1.MainView(v.Local.sGridView)
+f.Intrinsic.Control.EndSelect
+
+gui.Form.GsGridControl1.ResumeLayout
+
+f.Intrinsic.Control.CallSub("DeSerialize")
+
+gui.Form..Visible(True) 'visible command is almost 1 second faster than using show
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("LoadGridView_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.LoadGridView.End
+
+Program.Sub.CacheBrowserData.Start
+F.Intrinsic.Control.SetErrorHandler("CacheBrowserData_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.sSQL.Declare
+v.Local.sXML.Declare
+
+f.Intrinsic.Control.If(v.DataTable.dtInventoryBrowser.Exists)
+	f.Data.Datatable.Close("dtInventoryBrowser")
+f.Intrinsic.Control.EndIf
+
+f.Intrinsic.String.Build("{0}\{1}InventoryBrowserCacheData.xml",v.Caller.FilesDir,v.Caller.CompanyCode,v.Local.sXML)
+'and A.Rev = B.Rev
+v.Local.sSQL.Set("select DISTINCT SUBSTRING(A.PART, 1, 17) AS Part, SUBSTRING(A.PART, 18, 3) AS Rev, A.LOCATION AS Loc, A.DESCRIPTION AS Description, A.DESCRIPTION_2 AS Alt1Descr, A.DESCRIPTION_3 AS Alt2Descr,A.PRODUCT_LINE AS ProductLine, A.QTY_ONHAND AS OnHand, (convert(A.QTY_ONORDER_WO,SQL_FLOAT)  + convert(A.QTY_ONORDER_PO,SQL_FLOAT)) AS OnOrder, A.QTY_REQUIRED AS Required, (convert(A.QTY_ONHAND,SQL_FLOAT) + convert(A.QTY_ONORDER_PO,SQL_FLOAT) + convert(A.QTY_ONORDER_WO,SQL_FLOAT) - convert(A.QTY_REQUIRED,SQL_FLOAT)) AS Net, A.CODE_ABC, A.BIN, A.UM_PURCHASING, A.UM_INVENTORY, CASE WHEN A.OBSOLETE_FLAG = 'Y' THEN CONVERT(1,SQL_BIT) WHEN A.OBSOLETE_FLAG <> 'Y' THEN CONVERT(0,SQL_BIT) END AS OBSOLETE_FLAG, A.CODE_SORT, CASE WHEN A.FLAG_INACTIVE = 'Y' THEN CONVERT(1,SQL_BIT) WHEN A.FLAG_INACTIVE <> 'Y' THEN CONVERT(0,SQL_BIT) END AS FLAG_INACTIVE, A.CODE_SOURCE, A.NAME_VENDOR, A.TEXT_INFO1, A.TEXT_INFO2, A.LENGTH, A.WIDTH, A.THICKNESS, A.PART AS PartRev, A.STOCK_BIN,B.* from V_INVENTORY_ALL A LEFT JOIN GCG_6427_INV_EXTRA B ON A.PART = B.PART and A.Location = B.Location;")
+
+F.ODBC.Connection!CONX.OpenCompanyConnection
+
+f.Intrinsic.Control.Try
+	f.Data.Datatable.CreateFromSQL("dtInventoryBrowser","conx",v.Local.sSQL)
+	f.Data.Datatable.SaveToXML("dtInventoryBrowser",0,True,v.Local.sXML)
+	f.Data.Datatable.Close("dtInventoryBrowser")
+f.Intrinsic.Control.Catch
+f.Intrinsic.Control.EndTry
+
+f.ODBC.Connection!conx.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("CacheBrowserData_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.CacheBrowserData.End
+
+Program.Sub.Form_RefreshClick.Start
+F.Intrinsic.Control.SetErrorHandler("Form_RefreshClick_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+
+gui.Form.GsGridControl1.Visible(False)
+f.Intrinsic.Control.CallSub(LoadGridView)
+gui.Form.GsGridControl1.Visible(True)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Form_RefreshClick_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.Form_RefreshClick.End
+
+Program.Sub.LoadContextMenu.Start
+F.Intrinsic.Control.SetErrorHandler("LoadContextMenu_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+
+Gui.Form..ContextMenuCreate("ctxBrowser")
+Gui.Form.GsGridControl1.ContextMenuAttach("ctxBrowser")
+Gui.Form..ContextMenuAddItem("ctxBrowser","Refresh",0,"Refresh")
+Gui.Form..ContextMenuAddItem("ctxBrowser","Export",0,"Export")
+Gui.Form..ContextMenuAddItem("ctxBrowser","ReloadCache",0,"Reload Cache")
+Gui.Form..ContextMenuSetItemEventHandler("ctxBrowser","Refresh","Form_RefreshClick")
+Gui.Form..ContextMenuSetItemEventHandler("ctxBrowser","Export","Form_ExportClick")
+Gui.Form..ContextMenuSetItemEventHandler("ctxBrowser","ReloadCache","ReloadCache")
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("LoadContextMenu_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.LoadContextMenu.End
+
+Program.Sub.LoadStandardView.Start
+F.Intrinsic.Control.SetErrorHandler("LoadStandardView_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+
+'set view mode variable and call refresh
+f.Intrinsic.Control.CallSub(Serialize)
+v.Global.iViewMode.Set(0)
+f.Intrinsic.Control.CallSub(Form_RefreshClick)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("LoadStandardView_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.LoadStandardView.End
+
+Program.Sub.LoadCrossReferenceView.Start
+F.Intrinsic.Control.SetErrorHandler("LoadCrossReferenceView_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+
+'set view mode variable and call refresh
+f.Intrinsic.Control.CallSub(Serialize)
+v.Global.iViewMode.Set(1)
+f.Intrinsic.Control.CallSub(Form_RefreshClick)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("LoadCrossReferenceView_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.LoadCrossReferenceView.End
+
+Program.Sub.Serialize.Start
+F.Intrinsic.Control.SetErrorHandler("Serialize_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.sSerialize.Declare
+v.Local.iWidth.Declare
+
+F.Global.Registry.AddValue(V.Caller.User,V.Caller.CompanyCode,"gvInventoryBrowser",6427,1,False,"ViewMode",False,v.Global.iViewMode,-999.0,1/1/1980,12:00:00 AM)
+
+f.Intrinsic.Control.SelectCase(v.Global.iViewMode)
+
+f.Intrinsic.Control.Case(0)
+	Gui.Form.GsGridControl1.Serialize("gvInventoryBrowser",V.Local.sSerialize)
+	F.Global.Registry.AddValue(V.Caller.User,V.Caller.CompanyCode,"gvInventoryBrowser",6427,10,False,"Serialize",False,0,-999.0,1/1/1980,12:00:00 AM,V.Local.sSerialize)
+f.Intrinsic.Control.Case(1)
+	Gui.Form.GsGridControl1.Serialize("gvInventoryBrowserXref",V.Local.sSerialize)
+	F.Global.Registry.AddValue(V.Caller.User,V.Caller.CompanyCode,"gvInventoryBrowser",6427,11,False,"Serialize",False,0,-999.0,1/1/1980,12:00:00 AM,V.Local.sSerialize)
+f.Intrinsic.Control.EndSelect
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Serialize_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.Serialize.End
+
+Program.Sub.DeSerialize.Start
+F.Intrinsic.Control.SetErrorHandler("DeSerialize_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.sSerialize.Declare
+
+'gvInventoryBrowser
+f.Intrinsic.Control.SelectCase(v.Global.iViewMode)
+f.Intrinsic.Control.Case(0) 'Standard
+	F.Global.Registry.ReadValue(V.Caller.User,V.Caller.CompanyCode,"gvInventoryBrowser",6427,10,6,"",V.Local.sSerialize)
+f.Intrinsic.Control.Case(1) 'Xref
+	F.Global.Registry.ReadValue(V.Caller.User,V.Caller.CompanyCode,"gvInventoryBrowser",6427,11,6,"",V.Local.sSerialize)
+f.Intrinsic.Control.EndSelect
+
+'Deserialize grid if serialization exists
+F.Intrinsic.Control.If(V.Local.sSerialize.Trim,<>,"")
+	f.Intrinsic.Control.Try
+		Gui.Form.GsGridControl1.Deserialize(V.Local.sSerialize)
+	f.Intrinsic.Control.Catch
+	f.Intrinsic.UI.Msgbox("Error occurred trying to deserialize the gridview.  Layout will remain standard.","Error")
+	f.Intrinsic.Control.EndTry
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("DeSerialize_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.DeSerialize.End
+
+Program.Sub.FormatStandardColumns.Start
+F.Intrinsic.Control.SetErrorHandler("FormatStandardColumns_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.i.Declare
+v.Local.iTotClmn.Declare
+v.Local.stitle.Declare
+
+gui.Form.GsGridControl1.SetGridviewProperty("gvInventoryBrowser","OptionsFindAlwaysVisible",True)
+gui.Form.GsGridControl1.SetGridviewProperty("gvInventoryBrowser","OptionsViewShowAutoFilterRow",True)
+gui.Form.GsGridControl1.SetGridviewProperty("gvInventoryBrowser","ShowGroupPanel",True)
+
+
+gui.Form.GsGridControl1.GetColumnCount("gvInventoryBrowser",v.Local.iTotClmn)
+f.Intrinsic.Math.Sub(v.Local.iTotClmn,1,v.Local.iTotClmn)
+f.Intrinsic.Control.For(v.Local.i,0,v.Local.iTotClmn,1)
+	gui.Form.GsGridControl1.GetColumnNamebyIndex("gvInventoryBrowser",v.Local.i,v.Local.stitle)
+	gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser",v.Local.stitle,"AllowEdit",False)
+	gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser",v.Local.stitle,"ReadOnly",True)
+	gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser",v.Local.stitle,"Visible",False)
+f.Intrinsic.Control.Next(v.Local.i)
+
+'PART
+
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","PART","Caption","Part")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","PART","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","PART","MinWidth",120)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","PART","Visible",True)
+
+'REV
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","REV","Caption","Rev")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","REV","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","REV","MinWidth",50)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","REV","Visible",True)
+
+
+'LOC
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","LOC","Caption","Loc")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","LOC","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","LOC","MinWidth",50)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","LOC","Visible",True)
+
+
+'DESCRIPTION
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","DESCRIPTION","Caption","Description")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","DESCRIPTION","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","DESCRIPTION","MinWidth",200)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","DESCRIPTION","Visible",True)
+
+
+'ALT1DESCR
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","ALT1DESCR","Caption","Alt 1 Description")
+'ALT2DESCR
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","ALT2DESCR","Caption","Alt 2 Description")
+'PRODUCTLINE
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","PRODUCTLINE","Caption","PL")
+'ONHAND
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","ONHAND","Caption","On Hand")
+'ONORDER
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","ONORDER","Caption","On Order")
+'REQUIRED
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","REQUIRED","Caption","Required")
+'NET
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","NET","Caption","Net")
+'CODE_ABC
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","CODE_ABC","Caption","ABC")
+'BIN
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","BIN","Caption","Default Bin")
+'UM_PURCHASING
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","UM_PURCHASING","Caption","Pur UM")
+'UM_INVENTORY
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","UM_INVENTORY","Caption","Inv UM")
+'OBSOLETE_FLAG
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","OBSOLETE_FLAG","Caption","Obsolete")
+'CODE_SORT
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","CODE_SORT","Caption","Sort Code")
+'FLAG_INACTIVE
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","FLAG_INACTIVE","Caption","Inactive")
+'CODE_SOURCE
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","CODE_SOURCE","Caption","Source")
+'NAME_VENDOR
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","NAME_VENDOR","Caption","Inv Vendor")
+'TEXT_INFO1
+f.global.General.ReadOption("400398",1,"","0000",v.Local.stitle)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","TEXT_INFO1","Caption",v.Local.stitle)
+'TEXT_INFO2
+f.global.General.ReadOption("400399",1,"","0000",v.Local.stitle)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","TEXT_INFO2","Caption",v.Local.stitle)
+'LENGTH
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","LENGTH","Caption","Length")
+'WIDTH
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","WIDTH","Caption","Width")
+'THICKNESS
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","THICKNESS","Caption","Thickness")
+'STOCK_BIN
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","STOCK_BIN","Caption","Stocking Bin")
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser","PARTREV","Caption","PartRev")
+
+Variable.Local.sQuery.Declare
+V.Local.sTemp.Declare
+V.Local.sTemp1.Declare
+
+F.ODBC.Connection!CONX.OpenCompanyConnection
+Variable.Local.sQuery.set("SELECT * from GCG_6427_INV_EXT_TIT")
+'Function.Odbc.Connection!Conx.Openrecordsetro("rstX",Variable.Local.sQuery)
+f.Data.Datatable.CreateFromSQL("DTLines","conx",v.Local.sQuery)
+'Function.Intrinsic.Control.if(Variable.Odbc.Conx!RstX.Eof,=,False)
+f.Intrinsic.Control.If(v.DataTable.DTLines.RowCount,>,0)
+	F.Intrinsic.Control.For(V.Local.i,1,60,1)
+'		F.Intrinsic.Control.If(V.ODBC.Conx!rstX.FieldValRTrim!USER[v.local.i],<>,"")
+		F.Intrinsic.Control.If(v.DataTable.DTLines(0).USER[v.local.i]!FieldValtrim,<>,"")
+			V.Local.sTemp.Set(v.DataTable.DTLines(0).USER[v.local.i]!FieldVal)
+		F.Intrinsic.Control.Else
+			Function.intrinsic.string.concat("User Extra ",V.Local.i,V.Local.sTemp)
+		F.Intrinsic.Control.EndIf
+		f.Intrinsic.String.Build("User{0}",v.local.i,V.Local.sTemp1)
+		GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowser",V.Local.sTemp1,"Caption",V.Local.sTemp)
+	F.Intrinsic.Control.Next(V.Local.i)
+Function.intrinsic.control.endif
+f.Data.Datatable.Close("DTLines")
+
+f.ODBC.Connection!conx.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("FormatStandardColumns_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.FormatStandardColumns.End
+
+Program.Sub.FormatXrefColumns.Start
+F.Intrinsic.Control.SetErrorHandler("FormatXrefColumns_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+
+gui.Form.GsGridControl1.SetGridviewProperty("gvInventoryBrowserXref","OptionsFindAlwaysVisible",True)
+gui.Form.GsGridControl1.SetGridviewProperty("gvInventoryBrowserXref","OptionsViewShowAutoFilterRow",True)
+gui.Form.GsGridControl1.SetGridviewProperty("gvInventoryBrowserXref","ShowGroupPanel",True)
+
+'PART
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PART","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PART","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PART","Caption","Part")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PART","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PART","MinWidth",120)
+
+'REV
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REV","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REV","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REV","Caption","Rev")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REV","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REV","MinWidth",50)
+
+'LOC
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LOC","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LOC","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LOC","Caption","Loc")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LOC","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LOC","MinWidth",50)
+
+'DESCRIPTION
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","DESCRIPTION","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","DESCRIPTION","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","DESCRIPTION","Caption","Description")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","DESCRIPTION","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","DESCRIPTION","MinWidth",200)
+
+'ALT1DESCR
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT1DESCR","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT1DESCR","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT1DESCR","Caption","Alt 1 Description")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT1DESCR","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT1DESCR","MinWidth",200)
+
+'ALT2DESCR
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT2DESCR","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT2DESCR","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT2DESCR","Caption","Alt 2 Description")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT2DESCR","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ALT2DESCR","MinWidth",200)
+
+'TEXT
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT","Caption","Extra Description")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT","MinWidth",200)
+
+'PRODUCTLINE
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PRODUCTLINE","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PRODUCTLINE","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PRODUCTLINE","Caption","PL")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PRODUCTLINE","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PRODUCTLINE","MinWidth",50)
+
+'ONHAND
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONHAND","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONHAND","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONHAND","Caption","On Hand")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONHAND","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONHAND","MinWidth",60)
+
+'ONORDER
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONORDER","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONORDER","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONORDER","Caption","On Order")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONORDER","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","ONORDER","MinWidth",60)
+
+'REQUIRED
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REQUIRED","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REQUIRED","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REQUIRED","Caption","Required")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REQUIRED","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","REQUIRED","MinWidth",60)
+
+'NET
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NET","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NET","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NET","Caption","Net")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NET","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NET","MinWidth",60)
+
+'CODE_ABC
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_ABC","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_ABC","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_ABC","Caption","ABC")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_ABC","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_ABC","MinWidth",60)
+
+'BIN
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","BIN","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","BIN","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","BIN","Caption","Default Bin")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","BIN","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","BIN","MinWidth",70)
+
+'UM_PURCHASING
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_PURCHASING","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_PURCHASING","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_PURCHASING","Caption","Pur UM")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_PURCHASING","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_PURCHASING","MinWidth",60)
+
+'UM_INVENTORY
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_INVENTORY","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_INVENTORY","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_INVENTORY","Caption","Inv UM")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_INVENTORY","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","UM_INVENTORY","MinWidth",60)
+
+'OBSOLETE_FLAG
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","OBSOLETE_FLAG","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","OBSOLETE_FLAG","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","OBSOLETE_FLAG","Caption","Obsolete")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","OBSOLETE_FLAG","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","OBSOLETE_FLAG","MinWidth",50)
+
+'CODE_SORT
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SORT","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SORT","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SORT","Caption","Sort Code")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SORT","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SORT","MinWidth",70)
+
+'FLAG_INACTIVE
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","FLAG_INACTIVE","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","FLAG_INACTIVE","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","FLAG_INACTIVE","Caption","Inactive")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","FLAG_INACTIVE","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","FLAG_INACTIVE","MinWidth",50)
+
+'CODE_SOURCE
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SOURCE","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SOURCE","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SOURCE","Caption","Source")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SOURCE","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CODE_SOURCE","MinWidth",50)
+
+'NAME_VENDOR
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NAME_VENDOR","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NAME_VENDOR","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NAME_VENDOR","Caption","Inv Vendor")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NAME_VENDOR","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","NAME_VENDOR","MinWidth",80)
+
+'TEXT_INFO1
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO1","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO1","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO1","Caption","Text Info 1")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO1","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO1","MinWidth",100)
+
+'TEXT_INFO2
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO2","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO2","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO2","Caption","Text Info 2")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO2","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","TEXT_INFO2","MinWidth",100)
+
+'LENGTH
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LENGTH","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LENGTH","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LENGTH","Caption","Length")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LENGTH","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","LENGTH","MinWidth",80)
+
+'WIDTH
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","WIDTH","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","WIDTH","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","WIDTH","Caption","Width")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","WIDTH","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","WIDTH","MinWidth",80)
+
+'THICKNESS
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","THICKNESS","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","THICKNESS","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","THICKNESS","Caption","Thickness")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","THICKNESS","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","THICKNESS","MinWidth",80)
+
+'PARTREV
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PARTREV","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PARTREV","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PARTREV","Caption","PartRev")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PARTREV","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","PARTREV","MinWidth",120)
+
+'STOCK_BIN
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","STOCK_BIN","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","STOCK_BIN","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","STOCK_BIN","Caption","Stocking Bin")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","STOCK_BIN","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","STOCK_BIN","MinWidth",70)
+
+'CUSTOMER
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER","Caption","Customer")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER","MinWidth",80)
+
+'CUSTOMER_PART
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER_PART","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER_PART","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER_PART","Caption","Customer Part")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER_PART","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","CUSTOMER_PART","MinWidth",120)
+
+'VENDOR
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","VENDOR","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","VENDOR","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","VENDOR","Caption","Vendor")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","VENDOR","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","VENDOR","MinWidth",70)
+
+'MFG_PART
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_PART","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_PART","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_PART","Caption","Mfg Part")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_PART","Visible",True)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_PART","MinWidth",120)
+
+'MFG_NAME
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_NAME","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_NAME","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_NAME","Caption","Mfg Name")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_NAME","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","MFG_NAME","MinWidth",120)
+
+'USER_DEFINED_PART
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","USER_DEFINED_PART","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","USER_DEFINED_PART","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","USER_DEFINED_PART","Caption","User Defined Part")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","USER_DEFINED_PART","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","USER_DEFINED_PART","MinWidth",120)
+
+'COMMENT
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","COMMENT","AllowEdit",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","COMMENT","ReadOnly",True)
+GUI.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","COMMENT","Caption","Comment")
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","COMMENT","Visible",False)
+gui.Form.GsGridControl1.SetColumnProperty("gvInventoryBrowserXref","COMMENT","MinWidth",120)
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("FormatXrefColumns_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.FormatXrefColumns.End
+
+Program.Sub.BuildFormCaption.Start
+F.Intrinsic.Control.SetErrorHandler("BuildFormCaption_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.sXML.Declare
+v.Local.dTimeStamp.Declare
+v.Local.sViewMode.Declare
+v.Local.sCaption.Declare
+
+v.Local.sXML.Set(v.Args.XMLfile)
+
+'check the cache file time stamp
+f.Intrinsic.File.GetFileDateTime(v.Local.sXML,v.Local.dTimeStamp)
+
+f.Intrinsic.Control.SelectCase(v.Global.iViewMode)
+f.Intrinsic.Control.Case(0)
+	v.Local.sViewMode.Set("Standard")
+f.Intrinsic.Control.Case(1)
+	v.Local.sViewMode.Set("Cross Reference")
+f.Intrinsic.Control.EndSelect
+
+f.Intrinsic.String.Build("Inventory Parts Browser - {0} ({1})",v.Local.sViewMode,v.Local.dTimeStamp,v.Local.sCaption)
+gui.Form..Caption(v.Local.sCaption)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("BuildFormCaption_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.BuildFormCaption.End
+
+Program.Sub.Form_ExportClick.Start
+F.Intrinsic.Control.SetErrorHandler("Form_ExportClick_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.bExcelExists.Declare
+v.Local.sGridView.Declare
+v.Local.sExportFilePath.Declare
+v.Local.sErrorMessage.Declare
+
+f.Automation.MSExcel.CheckPresence(v.Local.bExcelExists)
+
+v.Local.sGridView.Set("GsGridControl1")
+
+f.Intrinsic.Control.Try
+	f.Intrinsic.Control.If(v.Local.bExcelExists)
+		f.Intrinsic.String.Build("InventoryBrowserExport{0}",v.Ambient.Now.MMDDYYHHMMSS,v.Local.sExportFilePath)
+		f.Intrinsic.String.StripCharacters(v.Local.sExportFilePath,v.Local.sExportFilePath)
+		f.Intrinsic.String.Concat(v.Caller.TempDir,"\",v.Local.sExportFilePath,".xlsx",v.Local.sExportFilePath)
+		GUI.Form.[V.Local.sGridView].Export(V.Local.sExportFilePath,"xlsx")
+		F.Intrinsic.Task.ShellExec(0,"",V.Local.sExportFilePath,"","",1)
+	f.Intrinsic.Control.Else
+		f.Intrinsic.String.Build("InventoryBrowserExport{0}",v.Local.sGridView,v.Ambient.Now.MMDDYYHHMMSS,v.Local.sExportFilePath)
+		f.Intrinsic.String.StripCharacters(v.Local.sExportFilePath,v.Local.sExportFilePath)
+		f.Intrinsic.String.Concat(v.Caller.TempDir,"\",v.Local.sExportFilePath,".csv",v.Local.sExportFilePath)
+		GUI.Form.[V.Local.sGridView].Export(V.Local.sExportFilePath,"csv")
+		F.Intrinsic.Task.ShellExec(0,"",V.Local.sExportFilePath,"","",1)
+	f.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Form_ExportClick_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.Form_ExportClick.End
+
+Program.Sub.LoadIcon.Start
+F.Intrinsic.Control.SetErrorHandler("LoadIcon_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+v.Local.sIcon.Declare
+
+'set form icon
+f.Intrinsic.String.Build("{0}\ART\BROWSER_ICON.ICO",V.Caller.GlobalDir,V.Local.sIcon)
+f.Intrinsic.Control.Try
+	GUI.Form..Icon(V.Local.sIcon)
+f.Intrinsic.Control.Catch
+f.Intrinsic.Control.EndTry
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("LoadIcon_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.LoadIcon.End
+
+Program.Sub.ReloadCache.Start
+F.Intrinsic.Control.SetErrorHandler("ReloadCache_Err")
+F.Intrinsic.Control.ClearErrors
+V.Local.sError.Declare
+
+f.Intrinsic.Control.CallSub("CacheBrowserData")
+f.Intrinsic.Control.CallSub("Form_RefreshClick")
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("ReloadCache_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: {0}{1}{1}Subroutine: {2}{1}Error Occurred {3} with description {4}{1}{1}GAB Version: {5}",V.Ambient.ScriptPath,V.Ambient.Newline,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Ambient.GABVersion,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End 
+Function.Intrinsic.Control.EndIf
+Program.Sub.ReloadCache.End
+
+Program.Sub.Comments.Start
+${$5$}$3.0.0.0$}$1
+${$6$}$rnair$}$20210525205615117$}$JUGEdtlNdgRUPvge2DQ26bz/1piQWHOnzoTC3thrN75lTcLZVPmUioScWL3SDRyplbqi/rYx8A4=
+Program.Sub.Comments.End
