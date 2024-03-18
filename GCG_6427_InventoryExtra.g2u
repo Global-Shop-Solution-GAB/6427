@@ -1,0 +1,349 @@
+Program.Sub.ScreenSU.Start
+gui.F_Inv..create
+gui.F_Inv..caption("")
+gui.F_Inv..size(14820,10155)
+Gui.F_Inv..MinX(0)
+Gui.F_Inv..MinY(0)
+Gui.F_Inv..Position(0,0)
+Gui.F_Inv..BackColor(-2147483633)
+Gui.F_Inv..MousePointer(0)
+gui.F_Inv..event(unload,unload)
+gui.F_Inv.cmdSave.create(button)
+gui.F_Inv.cmdSave.caption("Save")
+gui.F_Inv.cmdSave.visible(True)
+gui.F_Inv.cmdSave.size(975,375)
+gui.F_Inv.cmdSave.zorder(0)
+gui.F_Inv.cmdSave.position(200,9200)
+gui.F_Inv.cmdSave.enabled(True)
+gui.F_Inv.cmdSave.fontname("Arial")
+gui.F_Inv.cmdSave.fontsize(8)
+gui.F_Inv.cmdSave.event(click,save)
+gui.F_Inv.lbl1.create(label,"User Extra 1",True,2085,255,1,200,200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl5.create(label,"User Extra 5",True,2085,255,1,200,800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl9.create(label,"User Extra 9",True,2085,255,1,200,1400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl13.create(label,"User Extra 13",True,2085,255,1,200,2000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl17.create(label,"User Extra 17",True,2085,255,1,200,2600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl21.create(label,"User Extra 21",True,2085,255,1,200,3200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl25.create(label,"User Extra 25",True,2085,255,1,200,3800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl29.create(label,"User Extra 29",True,2085,255,1,200,4400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl33.create(label,"User Extra 33",True,2085,255,1,200,5000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl37.create(label,"User Extra 37",True,2085,255,1,200,5600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl41.create(label,"User Extra 41",True,2085,255,1,200,6200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl45.create(label,"User Extra 45",True,2085,255,1,200,6800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl49.create(label,"User Extra 49",True,2085,255,1,200,7400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl53.create(label,"User Extra 53",True,2085,255,1,200,8000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl57.create(label,"User Extra 57",True,2085,255,1,200,8600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl2.create(label,"User Extra 2",True,2085,255,1,3800,200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl6.create(label,"User Extra 6",True,2085,255,1,3800,800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl10.create(label,"User Extra 10",True,2085,255,1,3800,1400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl14.create(label,"User Extra 14",True,2085,255,1,3800,2000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl18.create(label,"User Extra 18",True,2085,255,1,3800,2600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl22.create(label,"User Extra 22",True,2085,255,1,3800,3200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl26.create(label,"User Extra 26",True,2085,255,1,3800,3800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl30.create(label,"User Extra 30",True,2085,255,1,3800,4400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl34.create(label,"User Extra 34",True,2085,255,1,3800,5000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl38.create(label,"User Extra 38",True,2085,255,1,3800,5600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl42.create(label,"User Extra 42",True,2085,255,1,3800,6200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl46.create(label,"User Extra 46",True,2085,255,1,3800,6800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl50.create(label,"User Extra 50",True,2085,255,1,3800,7400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl54.create(label,"User Extra 54",True,2085,255,1,3800,8000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl58.create(label,"User Extra 58",True,2085,255,1,3800,8600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl3.create(label,"User Extra 3",True,2085,255,1,7400,200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl7.create(label,"User Extra 7",True,2085,255,1,7400,800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl11.create(label,"User Extra 11",True,2085,255,1,7400,1400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl15.create(label,"User Extra 15",True,2085,255,1,7400,2000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl19.create(label,"User Extra 19",True,2085,255,1,7400,2600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl23.create(label,"User Extra 23",True,2085,255,1,7400,3200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl27.create(label,"User Extra 27",True,2085,255,1,7400,3800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl31.create(label,"User Extra 31",True,2085,255,1,7400,4400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl35.create(label,"User Extra 35",True,2085,255,1,7400,5000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl39.create(label,"User Extra 39",True,2085,255,1,7400,5600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl43.create(label,"User Extra 43",True,2085,255,1,7400,6200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl47.create(label,"User Extra 47",True,2085,255,1,7400,6800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl51.create(label,"User Extra 51",True,2085,255,1,7400,7400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl55.create(label,"User Extra 55",True,2085,255,1,7400,8000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl59.create(label,"User Extra 59",True,2085,255,1,7400,8600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl4.create(label,"User Extra 4",True,2085,255,1,11000,200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl8.create(label,"User Extra 8",True,2085,255,1,11000,800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl12.create(label,"User Extra 12",True,2085,255,1,11000,1400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl16.create(label,"User Extra 16",True,2085,255,1,11000,2000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl20.create(label,"User Extra 20",True,2085,255,1,11000,2600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl24.create(label,"User Extra 24",True,2085,255,1,11000,3200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl28.create(label,"User Extra 28",True,2085,255,1,11000,3800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl32.create(label,"User Extra 32",True,2085,255,1,11000,4400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl36.create(label,"User Extra 36",True,2085,255,1,11000,5000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl40.create(label,"User Extra 40",True,2085,255,1,11000,5600,True,0,Arial,8,0,0)
+gui.F_Inv.lbl44.create(label,"User Extra 44",True,2085,255,1,11000,6200,True,0,Arial,8,0,0)
+gui.F_Inv.lbl48.create(label,"User Extra 48",True,2085,255,1,11000,6800,True,0,Arial,8,0,0)
+gui.F_Inv.lbl52.create(label,"User Extra 52",True,2085,255,1,11000,7400,True,0,Arial,8,0,0)
+gui.F_Inv.lbl56.create(label,"User Extra 56",True,2085,255,1,11000,8000,True,0,Arial,8,0,0)
+gui.F_Inv.lbl60.create(label,"User Extra 60",True,2085,255,1,11000,8600,True,0,Arial,8,0,0)
+gui.F_Inv.txt1.create(textbox,"",True,3495,315,0,200,400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt1.MaxLength(70)
+gui.F_Inv.txt5.create(textbox,"",True,3495,315,0,200,1000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt5.MaxLength(70)
+gui.F_Inv.txt9.create(textbox,"",True,3495,315,0,200,1600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt9.MaxLength(70)
+gui.F_Inv.txt13.create(textbox,"",True,3495,315,0,200,2200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt13.MaxLength(70)
+gui.F_Inv.txt17.create(textbox,"",True,3495,315,0,200,2800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt17.MaxLength(70)
+gui.F_Inv.txt21.create(textbox,"",True,3495,315,0,200,3400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt21.MaxLength(70)
+gui.F_Inv.txt25.create(textbox,"",True,3495,315,0,200,4000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt25.MaxLength(70)
+gui.F_Inv.txt29.create(textbox,"",True,3495,315,0,200,4600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt29.MaxLength(70)
+gui.F_Inv.txt33.create(textbox,"",True,3495,315,0,200,5200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt33.MaxLength(70)
+gui.F_Inv.txt37.create(textbox,"",True,3495,315,0,200,5800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt37.MaxLength(70)
+gui.F_Inv.txt41.create(textbox,"",True,3495,315,0,200,6400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt41.MaxLength(70)
+gui.F_Inv.txt45.create(textbox,"",True,3495,315,0,200,7000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt45.MaxLength(70)
+gui.F_Inv.txt49.create(textbox,"",True,3495,315,0,200,7600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt49.MaxLength(70)
+gui.F_Inv.txt53.create(textbox,"",True,3495,315,0,200,8200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt53.MaxLength(70)
+gui.F_Inv.txt57.create(textbox,"",True,3495,315,0,200,8800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt57.MaxLength(70)
+gui.F_Inv.txt2.create(textbox,"",True,3495,315,0,3800,400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt2.MaxLength(70)
+gui.F_Inv.txt6.create(textbox,"",True,3495,315,0,3800,1000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt6.MaxLength(70)
+gui.F_Inv.txt10.create(textbox,"",True,3495,315,0,3800,1600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt10.MaxLength(70)
+gui.F_Inv.txt14.create(textbox,"",True,3495,315,0,3800,2200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt14.MaxLength(70)
+gui.F_Inv.txt18.create(textbox,"",True,3495,315,0,3800,2800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt18.MaxLength(70)
+gui.F_Inv.txt22.create(textbox,"",True,3495,315,0,3800,3400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt22.MaxLength(70)
+gui.F_Inv.txt26.create(textbox,"",True,3495,315,0,3800,4000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt26.MaxLength(70)
+gui.F_Inv.txt30.create(textbox,"",True,3495,315,0,3800,4600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt30.MaxLength(70)
+gui.F_Inv.txt34.create(textbox,"",True,3495,315,0,3800,5200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt34.MaxLength(70)
+gui.F_Inv.txt38.create(textbox,"",True,3495,315,0,3800,5800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt38.MaxLength(70)
+gui.F_Inv.txt42.create(textbox,"",True,3495,315,0,3800,6400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt42.MaxLength(70)
+gui.F_Inv.txt46.create(textbox,"",True,3495,315,0,3800,7000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt46.MaxLength(70)
+gui.F_Inv.txt50.create(textbox,"",True,3495,315,0,3800,7600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt50.MaxLength(70)
+gui.F_Inv.txt54.create(textbox,"",True,3495,315,0,3800,8200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt54.MaxLength(70)
+gui.F_Inv.txt58.create(textbox,"",True,3495,315,0,3800,8800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt58.MaxLength(70)
+gui.F_Inv.txt3.create(textbox,"",True,3495,315,0,7400,400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt3.MaxLength(70)
+gui.F_Inv.txt7.create(textbox,"",True,3495,315,0,7400,1000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt7.MaxLength(70)
+gui.F_Inv.txt11.create(textbox,"",True,3495,315,0,7400,1600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt11.MaxLength(70)
+gui.F_Inv.txt15.create(textbox,"",True,3495,315,0,7400,2200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt15.MaxLength(70)
+gui.F_Inv.txt19.create(textbox,"",True,3495,315,0,7400,2800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt19.MaxLength(70)
+gui.F_Inv.txt23.create(textbox,"",True,3495,315,0,7400,3400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt23.MaxLength(70)
+gui.F_Inv.txt27.create(textbox,"",True,3495,315,0,7400,4000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt27.MaxLength(70)
+gui.F_Inv.txt31.create(textbox,"",True,3495,315,0,7400,4600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt31.MaxLength(70)
+gui.F_Inv.txt35.create(textbox,"",True,3495,315,0,7400,5200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt35.MaxLength(70)
+gui.F_Inv.txt39.create(textbox,"",True,3495,315,0,7400,5800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt39.MaxLength(70)
+gui.F_Inv.txt43.create(textbox,"",True,3495,315,0,7400,6400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt43.MaxLength(70)
+gui.F_Inv.txt47.create(textbox,"",True,3495,315,0,7400,7000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt47.MaxLength(70)
+gui.F_Inv.txt51.create(textbox,"",True,3495,315,0,7400,7600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt51.MaxLength(70)
+gui.F_Inv.txt55.create(textbox,"",True,3495,315,0,7400,8200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt55.MaxLength(70)
+gui.F_Inv.txt59.create(textbox,"",True,3495,315,0,7400,8800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt59.MaxLength(70)
+gui.F_Inv.txt4.create(textbox,"",True,3495,315,0,11000,400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt4.MaxLength(70)
+gui.F_Inv.txt8.create(textbox,"",True,3495,315,0,11000,1000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt8.MaxLength(70)
+gui.F_Inv.txt12.create(textbox,"",True,3495,315,0,11000,1600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt12.MaxLength(70)
+gui.F_Inv.txt16.create(textbox,"",True,3495,315,0,11000,2200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt16.MaxLength(70)
+gui.F_Inv.txt20.create(textbox,"",True,3495,315,0,11000,2800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt20.MaxLength(70)
+gui.F_Inv.txt24.create(textbox,"",True,3495,315,0,11000,3400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt24.MaxLength(70)
+gui.F_Inv.txt28.create(textbox,"",True,3495,315,0,11000,4000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt28.MaxLength(70)
+gui.F_Inv.txt32.create(textbox,"",True,3495,315,0,11000,4600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt32.MaxLength(70)
+gui.F_Inv.txt36.create(textbox,"",True,3495,315,0,11000,5200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt36.MaxLength(70)
+gui.F_Inv.txt40.create(textbox,"",True,3495,315,0,11000,5800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt40.MaxLength(70)
+gui.F_Inv.txt44.create(textbox,"",True,3495,315,0,11000,6400,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt44.MaxLength(70)
+gui.F_Inv.txt48.create(textbox,"",True,3495,315,0,11000,7000,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt48.MaxLength(70)
+gui.F_Inv.txt52.create(textbox,"",True,3495,315,0,11000,7600,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt52.MaxLength(70)
+gui.F_Inv.txt56.create(textbox,"",True,3495,315,0,11000,8200,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt56.MaxLength(70)
+gui.F_Inv.txt60.create(textbox,"",True,3495,315,0,11000,8800,True,0,Arial,8,16777215,1)
+gui.F_Inv.txt60.MaxLength(70)
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Variable.Global.DSN.Declare(String)
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+
+F.Intrinsic.Control.SelectCase(v.Caller.Hook)
+	F.Intrinsic.Control.Case(10120)
+		V.Passed.000068.Set("Additional")
+		
+		F.Intrinsic.Control.End
+		
+	F.Intrinsic.Control.Case(10210)
+		Function.Odbc.Connection!Conx.OpenCompanyConnection
+		Variable.Local.query.Declare(String)
+		Variable.local.names.declare(String)
+		Variable.Local.names.Redim(0,19)
+		Variable.local.fields.declare(String)
+		Variable.local.part.declare(String)
+		Variable.local.rev.declare(String)
+		Variable.local.location.declare(String)
+		Variable.local.hold.declare(String)
+		Variable.local.hold2.declare(String)
+		Variable.Local.I.declare(Long)
+		Variable.Local.X.declare(Long)
+		V.Local.iC.Declare(Long)
+		V.Local.sTemp.Declare(String)
+
+		Function.Intrinsic.String.RTrim(Variable.Passed.000007,Variable.Local.part)
+		Function.Intrinsic.String.RTrim(Variable.Passed.000008,Variable.Local.rev)
+		F.Intrinsic.String.RPad(V.Local.part," ",17,V.Local.part)
+		F.Intrinsic.String.Build("{0}{1}",V.Local.part,V.Local.rev.Trim,V.Local.part)
+		Function.Intrinsic.String.RTrim(Variable.Passed.000009,Variable.Local.location)
+
+		Function.intrinsic.string.concat("PART: ",Variable.Local.part," REV: ",Variable.Local.rev," LOCATION: ",Variable.Local.location,Variable.Local.hold)
+		Gui.F_Inv..caption(Variable.Local.hold)
+
+		Variable.Local.Query.set("SELECT * from GCG_6427_INV_EXT_TIT")
+		Function.Odbc.Connection!Conx.Openrecordsetro("rstX",Variable.Local.Query)
+		Function.Intrinsic.Control.if(Variable.Odbc.Conx!RstX.Eof,=,False)
+			F.Intrinsic.Control.For(V.Local.iC,1,60,1)
+				F.Intrinsic.Control.If(V.ODBC.Conx!rstX.FieldValRTrim!USER[v.local.iC],<>,"")
+					V.Local.sTemp.Set(V.ODBC.Conx!rstX.FieldValRTrim!USER[v.local.iC])
+				F.Intrinsic.Control.Else
+					Function.intrinsic.string.concat("User Extra ",V.Local.iC,V.Local.sTemp)
+				F.Intrinsic.Control.EndIf
+				Gui.F_Inv.lbl[v.local.iC].caption(V.Local.sTemp)
+			F.Intrinsic.Control.Next(V.Local.iC)
+		Function.intrinsic.control.endif
+		Function.Odbc.Conx!RstX.close
+
+		F.Intrinsic.String.Build("select * from GCG_6427_INV_EXTRA WHERE PART = '{0}' and Location = '{1}'",V.Local.part.Trim,V.Local.location,V.Local.query)
+		
+		Function.Odbc.Connection!Conx.Openrecordsetro("rstX",Variable.Local.Query)
+
+		Function.Intrinsic.Control.if(Variable.Odbc.Conx!RstX.Eof,=,False)
+			F.Intrinsic.Control.For(V.Local.iC,1,60,1)
+				Gui.F_Inv.txt[v.local.iC].text(V.ODBC.Conx!rstX.FieldValRTrim!USER[v.local.iC])
+			F.Intrinsic.Control.Next(V.Local.iC)
+		Function.intrinsic.control.endif
+
+		Function.Odbc.Conx!RstX.close
+
+		Gui.F_Inv..Show
+		
+	F.Intrinsic.Control.CaseElse
+		F.Intrinsic.Control.End
+		
+F.Intrinsic.Control.EndSelect
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6427_InventoryExtra.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(unload)
+Function.Intrinsic.Control.EndIf
+Program.Sub.Main.End
+
+Program.Sub.unload.Start
+F.Intrinsic.Control.SetErrorHandler("unload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+
+Function.Odbc.Connection!Conx.Close
+Function.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("unload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.Control.End
+Function.Intrinsic.Control.EndIf
+Program.Sub.unload.End
+
+Program.Sub.save.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String,"")
+V.Local.iC.Declare(Long)
+V.Local.sQuery.Declare(String)
+Variable.local.part.declare(String)
+Variable.local.rev.declare(String)
+Variable.local.location.declare(String)
+		
+Function.Intrinsic.String.RTrim(Variable.Passed.000007,Variable.Local.part)
+Function.Intrinsic.String.RTrim(Variable.Passed.000008,Variable.Local.rev)
+F.Intrinsic.String.RPad(V.Local.part," ",17,V.Local.part)
+F.Intrinsic.String.Build("{0}{1}",V.Local.part,V.Local.rev.Trim,V.Local.part)
+Function.Intrinsic.String.RTrim(Variable.Passed.000009,Variable.Local.location)
+		
+F.Intrinsic.String.Build("select * from GCG_6427_INV_EXTRA WHERE PART = '{0}' and Location = '{1}'",V.Local.part.Trim,V.Local.location,V.Local.sQuery)
+
+F.ODBC.Connection!Conx.OpenRecordsetRW("rstX",V.Local.sQuery)
+F.Intrinsic.Control.If(V.ODBC.Conx!rstX.EOF,=,True)
+	F.ODBC.Conx!rstX.AddNew
+	F.ODBC.Conx!rstX.Set!PART(V.Local.part.Trim)
+	F.ODBC.Conx!rstX.Set!LOCATION(V.Local.location)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.For(V.Local.iC,1,60,1)
+	F.ODBC.Conx!rstX.Set!USER[v.local.ic](V.Screen.F_Inv!txt[v.local.iC].Text)
+F.Intrinsic.Control.Next(V.Local.iC)
+
+F.ODBC.Conx!rstX.Update
+F.ODBC.Conx!rstX.close
+
+Function.Intrinsic.UI.MsgBox("Part Info Saved","Part Info Saved",0)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	F.Intrinsic.String.Build("Project: GCG_6427_InventoryExtra.g2u {0}{0}Subroutine: {1}{0}Error Occurred {2} with description {3}",V.Ambient.NewLine,V.Ambient.CurrentSubroutine,V.Ambient.ErrorNumber,V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(unload)
+Function.Intrinsic.Control.EndIf
+Program.Sub.save.End
